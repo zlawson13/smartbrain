@@ -1,7 +1,7 @@
 import React from 'react';
 import Navigation from './Components/Navigation/Navigation';
 import Logo from './Components/Logo/Logo';
-import Clarifai from '/Clarifai';
+import Clarifai from 'clarifai';
 import FaceRecogntion from './Components/FaceRecogntion/FaceRecogntion'
 import Particles from 'react-particles-js';
 import ImageLinkForm from './Components/ImageLinkForm/ImageLinkForm';
@@ -30,9 +30,29 @@ class App extends React.Component {
     super();
     this.state = {
       input: '',
-      imageUrl: ''
+      imageUrl: '',
+      box: {},
     }
   }
+
+  calculateFaceLocation= (data) => {
+    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById('inputimage');
+    const width = Number(image.width);
+    const height = Number(image.height);
+    console.log(width, height);
+    return {
+      leftCol: clarifaiFace.left_col * width,
+      topRow: clarifaiFace.top_row * height,
+      rightCol: width - (clarifaiFace.right_col * width),
+      bottomRow: height - (clarifaiFace.bottom_row * height)
+    }
+  }
+
+  displayFaceBox = (box) => {
+    this.setState({box: box});
+  }
+
 
   onButtonSubmit = () => {
     this.setState=({imageUrl: this.state.input});
@@ -40,15 +60,9 @@ class App extends React.Component {
     app.models.predict(
       Clarifai.FACE_DETECT_MODEL,
       this.state.input)
-      .then(
-  function(response) {
-    console.log(response.outputs[0].data.regions[0].region_info.bounding_box[0])
-  },
-  function(err) {
-    //There was an error//
-    }
-
-  ) 
+      .then(response => this.displayFaceBox(this.calculateFaceLocation(response)))
+      .catch(error => console.log(error));
+ 
 };
 
 
@@ -65,7 +79,7 @@ class App extends React.Component {
       <Logo />
       <Rank />
       <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-      <FaceRecogntion imageUrl={this.state.imageUrl} />
+      <FaceRecogntion box={this.state.box} imageUrl={this.state.imageUrl} />
     </div>
   )
   }
