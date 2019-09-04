@@ -1,5 +1,6 @@
 import React from 'react';
 import Navigation from './Components/Navigation/Navigation';
+import Signin from './Components/Signin/Signin';
 import Logo from './Components/Logo/Logo';
 import Clarifai from 'clarifai';
 import FaceRecogntion from './Components/FaceRecogntion/FaceRecogntion'
@@ -32,6 +33,7 @@ class App extends React.Component {
       input: '',
       imageUrl: '',
       box: {},
+      route: 'signin',
     }
   }
 
@@ -70,18 +72,27 @@ class App extends React.Component {
     this.setState({input: event.target.value});
   }
 
+  onRouteChange = (route) => {
+      this.setState({route: route});
+  }
+
   render () {
     return(
     <div className="App">
         <Particles className='particles'
                 params={particleOptions} />
-      <Navigation />
-      <Logo />
-      <Rank />
-      <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-      <FaceRecogntion box={this.state.box} imageUrl={this.state.imageUrl} />
-    </div>
-  )
+      <Navigation onRouteChange={this.onRouteChange} />
+      { this.state.route === 'signin'
+      ? <Signin onRouteChange={this.onRouteChange} />
+      : <div>
+        <Logo />
+        <Rank />
+        <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
+        <FaceRecogntion box={this.state.box} imageUrl={this.state.imageUrl} />
+        </div>
+      }
+      </div>
+    )
   }
 }
 export default App
