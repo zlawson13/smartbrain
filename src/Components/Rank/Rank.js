@@ -1,4 +1,4 @@
-import React from 'react';
+import React from './node_modules/react';
 import './Rank';
 
 const Rank = () => {
@@ -15,4 +15,4 @@ const Rank = () => {
 }
 
 
-export default Rank
+export default Rank;
