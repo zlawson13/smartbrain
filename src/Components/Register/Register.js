@@ -1,4 +1,4 @@
-import React from './node_modules/react';
+import React from 'react';
 
 class Register extends React.Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class Register extends React.Component {
   }
 
   onSubmitSignIn = () => {
-    fetch('https://agile-plains-23734.herokuapp.com/register', {
+    fetch('https://agile-plains-23734.herokuapp.com/Register', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
