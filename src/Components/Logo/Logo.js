@@ -1,5 +1,5 @@
 import React from 'react';
-import Tilt from '/react-tilt';
+import Tilt from 'react-tilt';
 import brain from './Brain.png';
 import './Logo.css';
 
